@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using GameStore_IL.Models;
+using ShopApp.Models;
 using ShopApp.Data;
 
 namespace ShopApp.Controllers

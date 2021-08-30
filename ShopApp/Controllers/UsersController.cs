@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using GameStore_IL.Models;
+using ShopApp.Models;
 using ShopApp.Data;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;

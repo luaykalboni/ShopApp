@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Store_L.Models
+namespace ShopApp.Models
 {
     public class User
     {
