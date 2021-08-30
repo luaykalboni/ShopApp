@@ -101,8 +101,8 @@ namespace ShopApp.Controllers
                 claims, CookieAuthenticationDefaults.AuthenticationScheme
                 );
             var authProperties = new AuthenticationProperties {
-                
-                //ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10) 
+
+                ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10) 
             };
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,

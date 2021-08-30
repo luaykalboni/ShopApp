@@ -20,12 +20,12 @@ namespace ShopApp.Controllers
         }
 
         // GET: Products
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int categoryId)
         {
-            var shoppingsiteContext = _context.Product.Include(p => p.Category);
-            return View(await shoppingsiteContext.ToListAsync());
+            var shoppingsiteContext = _context.Product.Include(p => p.Category).Where(p => p.CategoryId == categoryId).ToListAsync();
+            return View("Index", await shoppingsiteContext); 
         }
-
+      
         // GET: Products/Details/5
         public async Task<IActionResult> Details(int? id)
         {
