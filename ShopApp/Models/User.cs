@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GameStore_IL.Models
+namespace Store_L.Models
 {
     public class User
     {
