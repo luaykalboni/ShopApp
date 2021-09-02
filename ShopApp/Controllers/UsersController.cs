@@ -50,39 +50,67 @@ namespace ShopApp.Controllers
         //adding a product to user's cart
         [Authorize]
         [HttpPost]
-        public void Add_To_Cart(int proId, string userName)
+        public async Task<User> Add_To_Cart(int proId, string userName)
         {
-            var pro = _context.Product.Where(p => p.Id == proId).FirstOrDefault();
+            var pro = await _context.Product.Where(p => p.Id == proId).FirstOrDefaultAsync();
+            bool flag = false;
             if (pro != null)
             {
-                var user =  _context.User.Where(u => u.Username == userName)
+                var user = await _context.User.Where(u => u.Username == userName)
                     .Include(u => u.Cart)
-                    .ThenInclude(c=>c.Products)
-                    .FirstOrDefault();
+                    .ThenInclude(c => c.lines)
+                    .ThenInclude(l=>l.product)
+                    .FirstOrDefaultAsync();
 
-                user.Cart.Products.Add(pro);
-                user.Cart.TotalPrice += pro.Price;
-                 _context.SaveChanges();
+                if (user.Cart.lines.Count != 0)
+                {
+
+                    user.Cart.lines.ForEach(l =>
+                    {
+                        if (l.productId == proId)
+                        {
+                            l.qty++;
+                            l.total_price_line += pro.Price;
+                            flag = true;
+                        }
+
+                    });
+                    if (flag != true)
+                    {
+                        user.Cart.lines.Add(new CartLine()
+                        {
+                            product = pro,
+                            qty = 1,
+                            total_price_line = pro.Price,
+
+                        });
+                    }
+                    user.Cart.TotalPrice += pro.Price;
+                    //await _context.SaveChangesAsync();
+                    //return user;
+                }
+                else
+                {
+                    user.Cart.lines.Add(new CartLine()
+                    {
+                        product = pro,
+                        qty = 1,
+                        total_price_line = pro.Price,
+
+                    });
+                    user.Cart.TotalPrice += pro.Price;
+
+                }
+
+                await _context.SaveChangesAsync();
+                return user;
+
             }
+            return null;
+
 
         }
-        //[HttpPost]
-        //public void Remove_To_Cart(int proId, string userName)
-        //{
-        //    var pro = _context.Product.Where(p => p.Id == proId).FirstOrDefault();
-        //    if (pro != null)
-        //    {
-        //        var user = _context.User.Where(u => u.Username == userName)
-        //            .Include(u => u.Cart)
-        //            .ThenInclude(c => c.Products)
-        //            .FirstOrDefault();
 
-        //        user.Cart.Products.Add(pro);
-        //        user.Cart.TotalPrice += pro.Price;
-        //        _context.SaveChanges();
-        //    }
-
-        //}
 
         //Users//Logout
         //Function  for sighning out
@@ -170,7 +198,7 @@ namespace ShopApp.Controllers
                     Cart c = new Cart()
                     {
                         User = user,
-                        Products = new List<Product>()
+                        lines= new List<CartLine>()
                         
                     };
                     user.Cart = c;

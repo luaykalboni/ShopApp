@@ -1,64 +1,172 @@
-﻿<div class="container mt-5 p-3 rounded cart">
+﻿@model ShopApp.Models.Cart
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+@{var user = Context.User.Identity.Name;}
+
+<div class="container mt-5 p-3 rounded cart">
     <div class="row no-gutters">
         <div class="col-md-8">
-            <div class="product-details mr-2">
-                <div class="d-flex flex-row align-items-center"><i class="fa fa-long-arrow-left"></i><span class="ml-2">Continue Shopping</span></div>
-                <hr>
-                <h6 class="mb-0">Shopping cart</h6>
-                <div class="d-flex justify-content-between">
-                    <span>You have 4 items in your cart</span>
-                    <div class="d-flex flex-row align-items-center">
-                        <span class="text-black-50">Sort by:</span>
-                        <div class="price ml-2"><span class="mr-1">price</span><i class="fa fa-angle-down"></i></div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            #Index
+                        </th>
+                        <th>
+                            Product img
+
+                        </th>
+                        <th>
+                            Product Name
+                        </th>
+
+                        <th>
+                            Product category
+
+                        </th>
+                        <th>
+                            Product price
+                        </th>
+
+                        <th>
+                            Remove
+
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{int index = 0; }
+                    @for (int i = 0; i < Model.lines.Count(); i++)
+                    {
+                        var item = Model.lines[i].product;
+                        var itemqty = Model.lines[i].qty;
+                        index++;
+        <tr id="line-pro-@item.Id" data-action="row" data-proid="@item.Id">
+            <td>
+                #@index
+            </td>
+            <td>
+                <img class="rounded" src="@item.imagePath" width="40">
+            </td>
+            <td>
+                <label>
+                    @item.Name
+                    <strong id="qty-strong-@item.Id" data-action="qty" data-proid="@item.Id">
+                        x @itemqty
+                    </strong>
+                </label>
+
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+
+            <td>
+                <button type="button" data-userid="@Model.User.Username" id="removeBtn-@item.Id" data-name="@item.Name" data-action="Remove_From_Cart" data-productid="@item.Id" class="btn btn-danger">X</button>
+            </td>
+        </tr>
+}
+
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" id="mod_btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Open Cart
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Cart of "@Model.User.Username</h5>
                     </div>
-                </div>
-                <div class="d-flex justify-content-between align-items-center mt-3 p-2 items rounded">
-                    <div class="d-flex flex-row">
-                        <img class="rounded" src="https://i.imgur.com/QRwjbm5.jpg" width="40">
-                        <div class="ml-2"><span class="font-weight-bold d-block">Iphone 11 pro</span><span class="spec">256GB, Navy Blue</span></div>
+                    <div class="modal-body">
+                        <div class="payment-info">
+                            <div class="d-flex justify-content-between align-items-center"><span>Card details</span></div><span class="type d-block mt-3 mb-1">Card type</span><label class="radio">
+                                <input type="radio" name="card" value="payment" checked> <span><img width="30" src="https://img.icons8.com/color/48/000000/mastercard.png" /></span>
+                            </label>
+                            <label class="radio"> <input type="radio" name="card" value="payment"> <span><img width="30" src="https://img.icons8.com/officel/48/000000/visa.png" /></span> </label>
+                            <label class="radio"> <input type="radio" name="card" value="payment"> <span><img width="30" src="https://img.icons8.com/ultraviolet/48/000000/amex.png" /></span> </label>
+                            <label class="radio"> <input type="radio" name="card" value="payment"> <span><img width="30" src="https://img.icons8.com/officel/48/000000/paypal.png" /></span> </label>
+                            <div><label class="credit-card-label">Name on card</label><input type="text" class="form-control credit-inputs" placeholder="Name"></div>
+                            <div><label class="credit-card-label">Card number</label><input type="text" class="form-control credit-inputs" placeholder="0000 0000 0000 0000" id="credit_num"></div>
+                            <div class="row">
+                                <div class="col-md-6"><label class="credit-card-label">Date</label><input type="text" class="form-control credit-inputs" placeholder="12/24"></div>
+                                <div class="col-md-6"><label class="credit-card-label">CVV</label><input type="text" class="form-control credit-inputs" placeholder="342"></div>
+                            </div>
+                            <hr class="line">
+                            <div class="d-flex justify-content-between information"><span>Subtotal</span><span id="total_price">$3000.00</span></div>
+                        </div>
+
                     </div>
-                    <div class="d-flex flex-row align-items-center"><span class="d-block">2</span><span class="d-block ml-5 font-weight-bold">$900</span><i class="fa fa-trash-o ml-3 text-black-50"></i></div>
-                </div>
-                <div class="d-flex justify-content-between align-items-center mt-3 p-2 items rounded">
-                    <div class="d-flex flex-row">
-                        <img class="rounded" src="https://i.imgur.com/GQnIUfs.jpg" width="40">
-                        <div class="ml-2"><span class="font-weight-bold d-block">One pro 7T</span><span class="spec">256GB, Navy Blue</span></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary">Save changes</button>
                     </div>
-                    <div class="d-flex flex-row align-items-center"><span class="d-block">2</span><span class="d-block ml-5 font-weight-bold">$900</span><i class="fa fa-trash-o ml-3 text-black-50"></i></div>
-                </div>
-                <div class="d-flex justify-content-between align-items-center mt-3 p-2 items rounded">
-                    <div class="d-flex flex-row">
-                        <img class="rounded" src="https://i.imgur.com/o2fKskJ.jpg" width="40">
-                        <div class="ml-2"><span class="font-weight-bold d-block">Google pixel 4 XL</span><span class="spec">256GB, Axe black</span></div>
-                    </div>
-                    <div class="d-flex flex-row align-items-center"><span class="d-block">1</span><span class="d-block ml-5 font-weight-bold">$800</span><i class="fa fa-trash-o ml-3 text-black-50"></i></div>
-                </div>
-                <div class="d-flex justify-content-between align-items-center mt-3 p-2 items rounded">
-                    <div class="d-flex flex-row">
-                        <img class="rounded" src="https://i.imgur.com/Tja5H1c.jpg" width="40">
-                        <div class="ml-2"><span class="font-weight-bold d-block">Samsung galaxy Note 10&nbsp;</span><span class="spec">256GB, Navy Blue</span></div>
-                    </div>
-                    <div class="d-flex flex-row align-items-center"><span class="d-block">1</span><span class="d-block ml-5 font-weight-bold">$999</span><i class="fa fa-trash-o ml-3 text-black-50"></i></div>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="payment-info">
-                <div class="d-flex justify-content-between align-items-center"><span>Card details</span><img class="rounded" src="https://i.imgur.com/WU501C8.jpg" width="30"></div><span class="type d-block mt-3 mb-1">Card type</span><label class="radio"> <input type="radio" name="card" value="payment" checked> <span><img width="30" src="https://img.icons8.com/color/48/000000/mastercard.png" /></span> </label>
-                <label class="radio"> <input type="radio" name="card" value="payment"> <span><img width="30" src="https://img.icons8.com/officel/48/000000/visa.png" /></span> </label>
-                <label class="radio"> <input type="radio" name="card" value="payment"> <span><img width="30" src="https://img.icons8.com/ultraviolet/48/000000/amex.png" /></span> </label>
-                <label class="radio"> <input type="radio" name="card" value="payment"> <span><img width="30" src="https://img.icons8.com/officel/48/000000/paypal.png" /></span> </label>
-                <div><label class="credit-card-label">Name on card</label><input type="text" class="form-control credit-inputs" placeholder="Name"></div>
-                <div><label class="credit-card-label">Card number</label><input type="text" class="form-control credit-inputs" placeholder="0000 0000 0000 0000"></div>
-                <div class="row">
-                    <div class="col-md-6"><label class="credit-card-label">Date</label><input type="text" class="form-control credit-inputs" placeholder="12/24"></div>
-                    <div class="col-md-6"><label class="credit-card-label">CVV</label><input type="text" class="form-control credit-inputs" placeholder="342"></div>
-                </div>
-                <hr class="line">
-                <div class="d-flex justify-content-between information"><span>Subtotal</span><span>$3000.00</span></div>
-                <div class="d-flex justify-content-between information"><span>Shipping</span><span>$20.00</span></div>
-                <div class="d-flex justify-content-between information"><span>Total(Incl. taxes)</span><span>$3020.00</span></div><button class="btn btn-primary btn-block d-flex justify-content-between mt-3" type="button"><span>$3020.00</span><span>Checkout<i class="fa fa-long-arrow-right ml-1"></i></span></button>
-            </div>
-        </div>
+
     </div>
 </div>
+
+
+                                                                                                            
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/js/site_additions.js"></script>
+
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+
+@section scripts
+    {
+    <script>
+
+        $("#mod_btn").click(e => {
+            $("#exampleModal").modal();
+        });
+
+        $(document).ready(function () {
+
+
+            const sett1 = {
+                post_remove_fromCart: "@Url.Action("Remove_From_Cart", "Carts")",
+                data_action: "Remove_From_Cart",
+            }
+            console.log(sett1);
+            
+                const btns = document.querySelectorAll(`[data-action=${CSS.escape('Remove_From_Cart')}]`);
+                btns.forEach(btn => {
+                    btn.addEventListener("click", e => {
+                        console.log("click");
+                        var key = e.target;
+                        var idJQ = "#" + key.id;
+                        var pro_id = $(idJQ).data('productid');
+                        var name = $(idJQ).data('name');
+                        var userName = $(idJQ).data('userid');
+
+                        console.log(pro_id);
+                        console.log(name);
+
+
+
+                        $.ajax({
+                            type: "POST",
+                            url: sett1.post_remove_fromCart,
+                            data: { proId: pro_id, userName: userName }
+                            //    dataType: "json"
+                        });
+
+
+
+                    });
+                });
+        });
+    </script>
+}

@@ -32,9 +32,54 @@ namespace ShopApp.Controllers
         public async Task<IActionResult> Usercart(string userName)
         {
 
-            var shoppingsiteContext = await _context.Cart.Include(c => c.Products).Where(u =>u.User.Username==userName).ToListAsync();
+            var shoppingsiteContext = await _context.Cart
+                .Include(c => c.lines)
+                .ThenInclude(l=>l.product)
+                .Include(c=>c.User).Where(u => u.User.Username == userName).FirstOrDefaultAsync();
             return View(shoppingsiteContext);
         }
+
+        [HttpPost]
+        public async Task<User> Remove_From_Cart(int proId, string userName)
+
+        {
+            var pro = await _context.Product.Where(p => p.Id == proId).FirstOrDefaultAsync();
+            if (pro != null)
+            {
+                var user = await _context.User.Where(u => u.Username == userName)
+                    .Include(u => u.Cart)
+                    .ThenInclude(c => c.lines)
+                    .ThenInclude(l => l.product)
+                    .FirstOrDefaultAsync();
+
+                user.Cart.lines.ForEach(l =>
+                {
+                    if (l.productId == proId)
+                    {
+                        if (l.qty > 1)
+                        {
+                            l.qty--;
+                            l.total_price_line -= pro.Price;
+                            user.Cart.TotalPrice -= pro.Price;
+                        }
+                        else
+                        {
+                            user.Cart.TotalPrice -= l.total_price_line;
+                            user.Cart.lines.Remove(l);
+                            
+                        }
+
+                    }
+                });
+
+                await _context.SaveChangesAsync();
+                return user;
+            }
+            return null;
+
+
+        }
+
 
         // GET: Carts/Details/5
         public async Task<IActionResult> Details(int? id)

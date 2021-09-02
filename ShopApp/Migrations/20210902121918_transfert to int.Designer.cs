@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ShopApp.Data;
 
 namespace ShopApp.Migrations
 {
     [DbContext(typeof(shoppingsiteContext))]
-    partial class shoppingsiteContextModelSnapshot : ModelSnapshot
+    [Migration("20210902121918_transfert to int")]
+    partial class transferttoint
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -18,22 +20,7 @@ namespace ShopApp.Migrations
                 .HasAnnotation("ProductVersion", "5.0.8")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("CartProduct", b =>
-                {
-                    b.Property<int>("CartsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CartsId", "ProductsId");
-
-                    b.HasIndex("ProductsId");
-
-                    b.ToTable("CartProduct");
-                });
-
-            modelBuilder.Entity("GameStore_IL.Models.Cart", b =>
+            modelBuilder.Entity("ShopApp.Models.Cart", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -54,7 +41,35 @@ namespace ShopApp.Migrations
                     b.ToTable("Cart");
                 });
 
-            modelBuilder.Entity("GameStore_IL.Models.Category", b =>
+            modelBuilder.Entity("ShopApp.Models.CartLine", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("cartId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("productId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("qty")
+                        .HasColumnType("int");
+
+                    b.Property<double>("total_price_line")
+                        .HasColumnType("float");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("cartId");
+
+                    b.HasIndex("productId");
+
+                    b.ToTable("CartLine");
+                });
+
+            modelBuilder.Entity("ShopApp.Models.Category", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -75,7 +90,7 @@ namespace ShopApp.Migrations
                     b.ToTable("Category");
                 });
 
-            modelBuilder.Entity("GameStore_IL.Models.Product", b =>
+            modelBuilder.Entity("ShopApp.Models.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -111,7 +126,7 @@ namespace ShopApp.Migrations
                     b.ToTable("Product");
                 });
 
-            modelBuilder.Entity("GameStore_IL.Models.User", b =>
+            modelBuilder.Entity("ShopApp.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -156,35 +171,39 @@ namespace ShopApp.Migrations
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("CartProduct", b =>
+            modelBuilder.Entity("ShopApp.Models.Cart", b =>
                 {
-                    b.HasOne("GameStore_IL.Models.Cart", null)
-                        .WithMany()
-                        .HasForeignKey("CartsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GameStore_IL.Models.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("GameStore_IL.Models.Cart", b =>
-                {
-                    b.HasOne("GameStore_IL.Models.User", "User")
+                    b.HasOne("ShopApp.Models.User", "User")
                         .WithOne("Cart")
-                        .HasForeignKey("GameStore_IL.Models.Cart", "UserId")
+                        .HasForeignKey("ShopApp.Models.Cart", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("GameStore_IL.Models.Product", b =>
+            modelBuilder.Entity("ShopApp.Models.CartLine", b =>
                 {
-                    b.HasOne("GameStore_IL.Models.Category", "Category")
+                    b.HasOne("ShopApp.Models.Cart", "cart")
+                        .WithMany("lines")
+                        .HasForeignKey("cartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ShopApp.Models.Product", "product")
+                        .WithMany("Carts")
+                        .HasForeignKey("productId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("cart");
+
+                    b.Navigation("product");
+                });
+
+            modelBuilder.Entity("ShopApp.Models.Product", b =>
+                {
+                    b.HasOne("ShopApp.Models.Category", "Category")
                         .WithMany("products")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -193,12 +212,22 @@ namespace ShopApp.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("GameStore_IL.Models.Category", b =>
+            modelBuilder.Entity("ShopApp.Models.Cart", b =>
+                {
+                    b.Navigation("lines");
+                });
+
+            modelBuilder.Entity("ShopApp.Models.Category", b =>
                 {
                     b.Navigation("products");
                 });
 
-            modelBuilder.Entity("GameStore_IL.Models.User", b =>
+            modelBuilder.Entity("ShopApp.Models.Product", b =>
+                {
+                    b.Navigation("Carts");
+                });
+
+            modelBuilder.Entity("ShopApp.Models.User", b =>
                 {
                     b.Navigation("Cart");
                 });

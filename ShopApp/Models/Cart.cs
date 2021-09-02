@@ -19,6 +19,7 @@ namespace ShopApp.Models
         public double TotalPrice { get; set; } = 0;
 
         //many <-> many : Cart <-> Product 
-        public List<Product> Products { get; set; }
+        public List<CartLine> lines { get; set; }
+
     }
 }

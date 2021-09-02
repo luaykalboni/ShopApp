@@ -21,11 +21,22 @@
                 <img src="@item.imagePath" class="card-img-top" alt="...">
 
                 <div class="card-body">
-                    <h5 class="card-title">@item.Name</h5>
-                    <p class="card-text">Price:@item.Price $</p>
-                    <a href="/Products/Details/@item.Id" class="btn btn-primary">Details</a>
-                    <button type="button" data-userid="@user" id="addButton-@item.Id" data-name="@item.Name" data-action="add_to_cart" data-productid="@item.Id" class="btn btn-success rounded-0 mb-3 d-flex mr-5 justify-content-end"> &thinsp;<ion-icon name="add-circle-outline"></ion-icon>Add to cart</button>
-                    <label id="lbl-qty-@item.Id" data-action="lbl_qty" data-productid="@item.Id"></label>
+                    @if (item.IsinStock == false)
+                    {
+                        <h5 class="card-title">@item.Name<span class="badge bg-danger">Not In Stock</span></h5>
+                        <p class="card-text">Price:@item.Price $</p>
+                        <a href="/Products/Details/@item.Id" class="btn btn-primary">Details</a>
+                    }
+                    else
+                    {
+                        <h5 class="card-title">@item.Name</h5>
+                        <p class="card-text">Price:@item.Price $</p>
+                        <a href="/Products/Details/@item.Id" class="btn btn-primary">Details</a>
+                        <button type="button" data-userid="@user" id="addButton-@item.Id" data-name="@item.Name" data-action="add_to_cart" data-productid="@item.Id" class="btn btn-success rounded-0 mb-3 d-flex mr-5 justify-content-end"> &thinsp;<ion-icon name="add-circle-outline"></ion-icon>Add to cart</button>
+                        <label id="lbl-qty-@item.Id" data-action="lbl_qty" data-productid="@item.Id"></label>
+
+                    }
+
                 </div>
             </div>
 
@@ -46,6 +57,8 @@
 
             const sett = {
                 post_add_to_cart: "@Url.Action("Add_To_Cart", "Users")",
+                data_action: "add_to_cart"
+
             }
             init(sett);
 

@@ -40,6 +40,18 @@ namespace ShopApp.Models
         public Category Category { get; set; }
 
         //many <-> many : Cart <-> Product
-        public List<Cart> Carts { get; set; }
+        public List<CartLine> Carts { get; set; }
+    }
+
+    public class CartLine
+    {
+        public int id { get; set; }
+        public int productId { get; set; }
+        public Product product{ get; set; }
+
+        public int cartId { get; set; }
+        public Cart cart{ get; set; }
+        public int qty { get; set; }
+        public double total_price_line { get; set; }
     }
 }

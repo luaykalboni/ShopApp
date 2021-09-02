@@ -45,7 +45,9 @@
 
                             }
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-route-userName="@Context.User.Identity.Name" asp-controller="Carts" asp-action="Usercart">My Cart</a>
+                                <a class="nav-link text-dark" asp-area="" asp-route-userName="@Context.User.Identity.Name" asp-controller="Carts" asp-action="Usercart">My Cart
+                                    <span id="cart-total-qty" class="badge bg-success">0</span>
+                                </a>
                             </li>
                             <div class="navbar-right">
                                 <li class="nav-item">

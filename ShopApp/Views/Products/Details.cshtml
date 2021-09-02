@@ -11,6 +11,12 @@
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.imagePath)
+        </dt>
+        <dd class="col-sm-10">
+            <img class="rounded" src="@Model.imagePath" width="40">
+        </dd>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
         </dt>
         <dd class="col-sm-10">
@@ -34,7 +40,7 @@
                 @Html.DisplayNameFor(model => model.imagePath)
             </dt>
             <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.imagePath)
+                <img class="rounded" src="@Model.imagePath" width="40">
             </dd>
         }
         <dt class="col-sm-2">
@@ -51,17 +57,48 @@
         </dd>
     </dl>
 </div>
+  @{var user = Context.User.Identity.Name;}
+
 @if (Context.User.IsInRole("Admin"))
+
 {
+
     <div>
         <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-        <a input type="button" onclick="history.back()" ><mark>Back to List</mark></a>
+        <a input type="button" onclick="history.back()"><mark>Back to List</mark></a>|
+        @if (Model.IsinStock == true)
+        {
+            <button data-userid="@user" id="addButton-@Model.Id" data-name="@Model.Name" data-action="add_to_cart" data-productid="@Model.Id" class="btn btn-success">+</button>
+        }
     </div>
 }
 else
 {
     <div>
-        <a input type="button" onclick="history.back()"><mark>Back to List</mark></a>
+        <a input type="button" onclick="history.back()"><mark>Back to List</mark></a>|
+        @if (Model.IsinStock == true)
+        {
+            <button data-userid="@user" id="addButton-@Model.Id" data-name="@Model.Name" data-action="add_to_cart" data-productid="@Model.Id" class="btn btn-success">+</button>
+        }
     </div>
 
+}
+
+
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/js/site_additions.js"></script>
+
+@section scripts
+    {
+    <script>
+        $(document).ready(function () {
+
+            const sett = {
+                post_add_to_cart: "@Url.Action("Add_To_Cart", "Users")",
+            }
+            init(sett);
+
+        });
+    </script>
 }
