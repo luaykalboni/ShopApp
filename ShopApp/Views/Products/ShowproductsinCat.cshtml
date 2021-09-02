@@ -1,0 +1,54 @@
+﻿@model IEnumerable<ShopApp.Models.Product>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Products</h1>
+
+@*view of products in category*@
+@{var user = Context.User.Identity.Name;}
+<div class="input-group mb-3">
+    <input type="text" data-action="filter_auto_complete" class="form-control" placeholder="Search product">
+</div>
+
+<div class="container">
+    <div class="row">
+
+        @foreach (var item in Model)
+        {
+            <div class="card col-3" style="width: 18rem;">
+                <img src="@item.imagePath" class="card-img-top" alt="...">
+
+                <div class="card-body">
+                    <h5 class="card-title">@item.Name</h5>
+                    <p class="card-text">Price:@item.Price $</p>
+                    <a href="/Products/Details/@item.Id" class="btn btn-primary">Details</a>
+                    <button type="button" data-userid="@user" id="addButton-@item.Id" data-name="@item.Name" data-action="add_to_cart" data-productid="@item.Id" class="btn btn-success rounded-0 mb-3 d-flex mr-5 justify-content-end"> &thinsp;<ion-icon name="add-circle-outline"></ion-icon>Add to cart</button>
+                    <label id="lbl-qty-@item.Id" data-action="lbl_qty" data-productid="@item.Id"></label>
+                </div>
+            </div>
+
+        }
+    </div>
+</div>
+@*</tbody>
+    </table>*@
+
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/js/site_additions.js"></script>
+
+@section scripts
+    {
+    <script>
+        $(document).ready(function () {
+
+            const sett = {
+                post_add_to_cart: "@Url.Action("Add_To_Cart", "Users")",
+            }
+            init(sett);
+
+        });
+    </script>
+}

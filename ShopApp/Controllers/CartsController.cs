@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ShopApp.Models;
 using ShopApp.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ShopApp.Controllers
 {
@@ -22,8 +23,17 @@ namespace ShopApp.Controllers
         // GET: Carts
         public async Task<IActionResult> Index()
         {
-            var shoppingsiteContext = _context.Cart.Include(c => c.User);
-            return View(await shoppingsiteContext.ToListAsync());
+
+            var shoppingsiteContext = await _context.Cart.Include(c => c.User).ToListAsync();
+            return View(shoppingsiteContext);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Usercart(string userName)
+        {
+
+            var shoppingsiteContext = await _context.Cart.Include(c => c.Products).Where(u =>u.User.Username==userName).ToListAsync();
+            return View(shoppingsiteContext);
         }
 
         // GET: Carts/Details/5

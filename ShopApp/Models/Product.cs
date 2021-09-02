@@ -27,14 +27,14 @@ namespace ShopApp.Models
         public string Description { get; set; }
 
         [Required(ErrorMessage = "Please enter the image url of your product.")]
-        [Display(Name = "Image path")]
+        [Display(Name = "Image")]
         [DataType(DataType.ImageUrl)]
         public string imagePath { get; set; }
         
         public bool IsinStock { get; set; }
 
         //one -> many : Category -> Product
-        [Display(Name = "Category Id")]
+        [Display(Name = "Category")]
         [Required]
         public int CategoryId { get; set; }
         public Category Category { get; set; }

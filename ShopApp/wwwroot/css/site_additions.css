@@ -1,0 +1,7 @@
+﻿
+.navbar-right {
+    position: absolute;
+    right: 20px;
+    display: flex;
+    flex-direction: row;
+}

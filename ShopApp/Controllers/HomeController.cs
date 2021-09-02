@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace ShopApp.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -29,7 +29,7 @@ namespace ShopApp.Controllers
             return View(await _context.Category.ToListAsync());
         }
 
-        //[Authorize]
+        [Authorize(Roles = "Admin")]
         public IActionResult Privacy()
         {
             return View();

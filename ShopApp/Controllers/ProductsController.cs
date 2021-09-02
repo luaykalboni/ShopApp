@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ShopApp.Models;
 using ShopApp.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ShopApp.Controllers
 {
@@ -20,10 +21,14 @@ namespace ShopApp.Controllers
         }
 
         // GET: Products
-        public async Task<IActionResult> Index(int categoryId)
+        public async Task<IActionResult> Index()
+        {
+            return View(await _context.Product.Include(p => p.Category).ToListAsync());
+        }
+        public async Task<IActionResult> ShowproductsinCat(int categoryId)
         {
             var shoppingsiteContext = _context.Product.Include(p => p.Category).Where(p => p.CategoryId == categoryId).ToListAsync();
-            return View("Index", await shoppingsiteContext); 
+            return View("ShowproductsinCat", await shoppingsiteContext); 
         }
       
         // GET: Products/Details/5
@@ -48,7 +53,7 @@ namespace ShopApp.Controllers
         // GET: Products/Create
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Category, "ID", "CategoryImage");
+            ViewData["CategoryId"] = new SelectList(_context.Category, "ID", "Name");
             return View();
         }
 
@@ -65,10 +70,11 @@ namespace ShopApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Category, "ID", "CategoryImage", product.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.Category, "ID", "Name", product.CategoryId);
             return View(product);
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: Products/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -82,7 +88,7 @@ namespace ShopApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["CategoryId"] = new SelectList(_context.Category, "ID", "CategoryImage", product.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.Category, "ID", "Name", product.CategoryId);
             return View(product);
         }
 
@@ -118,7 +124,7 @@ namespace ShopApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Category, "ID", "CategoryImage", product.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.Category, "ID", "Name", product.CategoryId);
             return View(product);
         }
 

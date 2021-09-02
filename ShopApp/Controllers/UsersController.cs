@@ -10,6 +10,7 @@ using ShopApp.Data;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ShopApp.Controllers
 {
@@ -46,7 +47,44 @@ namespace ShopApp.Controllers
             return View(user);
         }
 
-        //Users//Logour
+        //adding a product to user's cart
+        [Authorize]
+        [HttpPost]
+        public void Add_To_Cart(int proId, string userName)
+        {
+            var pro = _context.Product.Where(p => p.Id == proId).FirstOrDefault();
+            if (pro != null)
+            {
+                var user =  _context.User.Where(u => u.Username == userName)
+                    .Include(u => u.Cart)
+                    .ThenInclude(c=>c.Products)
+                    .FirstOrDefault();
+
+                user.Cart.Products.Add(pro);
+                user.Cart.TotalPrice += pro.Price;
+                 _context.SaveChanges();
+            }
+
+        }
+        //[HttpPost]
+        //public void Remove_To_Cart(int proId, string userName)
+        //{
+        //    var pro = _context.Product.Where(p => p.Id == proId).FirstOrDefault();
+        //    if (pro != null)
+        //    {
+        //        var user = _context.User.Where(u => u.Username == userName)
+        //            .Include(u => u.Cart)
+        //            .ThenInclude(c => c.Products)
+        //            .FirstOrDefault();
+
+        //        user.Cart.Products.Add(pro);
+        //        user.Cart.TotalPrice += pro.Price;
+        //        _context.SaveChanges();
+        //    }
+
+        //}
+
+        //Users//Logout
         //Function  for sighning out
         public async Task<IActionResult> Logout()
         {
@@ -60,8 +98,6 @@ namespace ShopApp.Controllers
         {
             return View();
         }
-
-
 
         // POST: Users/Login
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -131,6 +167,13 @@ namespace ShopApp.Controllers
 
                 if (q == null)
                 {
+                    Cart c = new Cart()
+                    {
+                        User = user,
+                        Products = new List<Product>()
+                        
+                    };
+                    user.Cart = c;
                     _context.Add(user);
                     await _context.SaveChangesAsync();
 
