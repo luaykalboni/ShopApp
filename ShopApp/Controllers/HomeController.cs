@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace ShopApp.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

@@ -35,7 +35,8 @@ namespace ShopApp.Controllers
             var shoppingsiteContext = await _context.Cart
                 .Include(c => c.lines)
                 .ThenInclude(l=>l.product)
-                .Include(c=>c.User).Where(u => u.User.Username == userName).FirstOrDefaultAsync();
+                .ThenInclude(c => c.Category)
+                .Include(u=>u.User).Where(u => u.User.Username == userName).FirstOrDefaultAsync();
             return View(shoppingsiteContext);
         }
 
@@ -52,7 +53,7 @@ namespace ShopApp.Controllers
                     .ThenInclude(l => l.product)
                     .FirstOrDefaultAsync();
 
-                user.Cart.lines.ForEach(async l =>
+                user.Cart.lines.ForEach(l =>
                 {
                     if (l.productId == proId)
                     {
@@ -65,13 +66,11 @@ namespace ShopApp.Controllers
                         else
                         {
                             user.Cart.TotalPrice -= l.total_price_line;
+                            l.product = null;
                             user.Cart.lines.Remove(l);
-                            await _context.SaveChangesAsync();
                         }
-
                     }
                 });
-
                 await _context.SaveChangesAsync();
                 return user;
             }

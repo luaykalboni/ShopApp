@@ -5,3 +5,15 @@
     display: flex;
     flex-direction: row;
 }
+
+.card-img-top {
+    height: 250px;
+    width: 250px;
+}
+.card {
+
+    margin: 15px;
+}
+    .card :hover {
+        transform: scale(1.5);
+    }

@@ -47,6 +47,7 @@ namespace ShopApp.Controllers
             return View(user);
         }
 
+    
         //adding a product to user's cart
         [Authorize]
         [HttpPost]

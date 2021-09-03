@@ -4,6 +4,7 @@
 }
 
 <html>
+<link rel="stylesheet" href="~/css/site_additions.css"/>
 <style>
     body {
         background-image: url('https://t3.ftcdn.net/jpg/02/84/84/80/360_F_284848032_6nxcbpmlfEb0jsQ49wLeirMf9PO2HG3D.jpg');
@@ -11,6 +12,22 @@
         background-attachment: fixed;
         background-size: cover;
     }
+
+
+    .card-img-top {
+        height: 250px;
+        width: 250px;
+    }
+
+
+    .card{
+        margin: 15px;
+    }
+
+        .card:hover{
+            transform: scale(1.05);
+            box-shadow 0 10px 20px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);)
+        }
 </style>
 <body>
     <div class="text-center">
@@ -18,15 +35,19 @@
         <h1 class="display-4">Welcome to ShopApp</h1>
     </div>
     <div id="body">
+        <form class="col-3 mt-4">
+            <input type="text" id="search_user_name" class="form-control" placeholder="Search Catsgory" aria-label="Search" />
+        </form>
+
         <div class="categoriesContainer">
             <div class="row">
 
                 @foreach (var item in Model)
                 {
-                    <div class="card col-3" style="width: 18rem;">
+                    <div class="card col-3" style="width: 18rem;" data-user_name="@item.Name" id="tr-@item.ID" data-action="row">
                         <img src="@item.CategoryImage" class="card-img-top" alt="...">
 
-                        <div class="card-body" >
+                        <div class="card-body">
                             <h5 class="card-title">@item.Name</h5>
                             <a asp-action="ShowproductsinCat" asp-controller="Products" asp-route-categoryId="@item.ID" class="btn btn-primary">View products</a>
                         </div>
@@ -39,3 +60,72 @@
 </html>
 
 
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
+
+
+@section scripts
+    {
+    <script>
+        $(document).ready(function () {
+    
+            $.ajax({
+                url: '@Url.Action("get_categories", "API")',
+                type: "Get",
+                dataType: "json",
+                success: function (data) {
+                    Filter(data);
+
+                }
+            });
+        });
+
+        const arr_userNames = [];
+        const search_inp = document.getElementById("search_user_name");
+        search_inp.addEventListener("keyup", filter_user_name);
+
+        function Filter(data) {
+            for (var i = 0; i < data.length; i++) {
+                arr_userNames.push(data[i]);
+            }
+        }
+
+        function filter_user_name(e) {
+            const text = e.target.value.toLowerCase();
+            const id_toShow = [];
+            const id_toHide = [];
+            if (text != "") {
+                arr_userNames.forEach(i => {
+                    var rows = document.querySelectorAll("[data-action='row']");
+                    if (i.toLowerCase().indexOf(text) != -1) {
+                        rows.forEach(r => {
+                            var id = "#" + r.id;
+                            if ($(id).data('user_name') == i) {
+                                id_toShow.push(id);
+                            }
+                            else {
+                                id_toHide.push(id);
+                            }
+                        });
+                        id_toHide.forEach(i => {
+                            $(i).hide();
+                        });
+
+                        id_toShow.forEach(i => {
+                            $(i).show();
+                        });
+                    }
+                });
+            }
+            else {
+                var rows = document.querySelectorAll("[data-action='row']");
+                rows.forEach(r => {
+                    var id = "#" + r.id;
+                    $(id).show();
+                });
+
+            }
+        }
+
+    </script>
+}

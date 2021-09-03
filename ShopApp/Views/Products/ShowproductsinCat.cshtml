@@ -2,33 +2,44 @@
 
 @{
     ViewData["Title"] = "Index";
+    Layout = "_Layout";
+
 }
 
 <h1>Products</h1>
+<link rel="stylesheet" href="~/css/site_additions.css" />
 
 @*view of products in category*@
 @{var user = Context.User.Identity.Name;}
-<div class="input-group mb-3">
-    <input type="text" data-action="filter_auto_complete" class="form-control" placeholder="Search product">
-</div>
-<style >
-    body {
-        background-image: url('https://t3.ftcdn.net/jpg/02/84/84/80/360_F_284848032_6nxcbpmlfEb0jsQ49wLeirMf9PO2HG3D.jpg');
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        background-size: cover;
+<form class="col-3 mt-4">
+    <input type="text" id="search_user_name" class="form-control" placeholder="Search..." aria-label="Search" />
+</form>
+<style>
+
+    .card-img-top {
+        height: 250px;
+        width: 250px;
     }
+
+    .card {
+        margin: 15px;
+    }
+
+        .card:hover {
+            transform: scale(1.3);
+        }
 </style>
+
 
 <div class="container">
     <div class="row">
 
         @foreach (var item in Model)
         {
-            <div class="card col-3" style="width: 18rem;">
+            <div class="card col-3" style="width: 18rem;" data-user_name="@item.Name" id="tr-@item.Id" data-action="row">
                 <img src="@item.imagePath" class="card-img-top" alt="...">
 
-                <div class="card-body" >
+                <div class="card-body">
                     @if (item.IsinStock == false)
                     {
                         <h5 class="card-title">@item.Name<span class="badge bg-danger">Not In Stock</span></h5>
@@ -40,7 +51,7 @@
                         <h5 class="card-title">@item.Name</h5>
                         <p class="card-text">Price: $@item.Price</p>
                         <a href="/Products/Details/@item.Id" class="btn btn-primary">Details</a>
-                        <button type="button" data-userid="@user" id="addButton-@item.Id" data-name="@item.Name" data-action="add_to_cart" data-productid="@item.Id" class="btn btn-success rounded-0 mb-3 d-flex mr-5 justify-content-end"> &thinsp;<ion-icon name="add-circle-outline"></ion-icon>Add to cart</button>
+                        <button type="button" data-userid="@user" id="addButton-@item.Id" data-name="@item.Name" data-action="add_to_cart" data-productid="@item.Id" class="btn btn-success rounded-0 mb-3 d-flex mr-5 justify-content-end "> &thinsp;<ion-icon name="add-circle-outline"></ion-icon>Add to cart</button>
                         <label id="lbl-qty-@item.Id" data-action="lbl_qty" data-productid="@item.Id"></label>
 
                     }
@@ -58,6 +69,7 @@
 <script src="~/lib/jquery/dist/jquery.js"></script>
 <script src="~/js/site_additions.js"></script>
 
+
 @section scripts
     {
     <script>
@@ -70,6 +82,65 @@
             }
             init(sett);
 
+
+
+            @*$.ajax({
+                url: '@Url.Action("get_categories", "API")',
+                type: "Get",
+                dataType: "json",
+                success: function (data) {
+                    Filter(data);
+
+                }
+            });*@
         });
+
+        //const arr_userNames = [];
+        //const search_inp = document.getElementById("search_user_name");
+        //search_inp.addEventListener("keyup", filter_user_name);
+
+        //function Filter(data) {
+        //    for (var i = 0; i < data.length; i++) {
+        //        arr_userNames.push(data[i]);
+        //    }
+        //}
+
+        //function filter_user_name(e) {
+        //    const text = e.target.value.toLowerCase();
+        //    const id_toShow = [];
+        //    const id_toHide = [];
+        //    if (text != "") {
+        //        arr_userNames.forEach(i => {
+        //            var rows = document.querySelectorAll("[data-action='row']");
+        //            if (i.toLowerCase().indexOf(text) != -1) {
+        //                rows.forEach(r => {
+        //                    var id = "#" + r.id;
+        //                    if ($(id).data('user_name') == i) {
+        //                        id_toShow.push(id);
+        //                    }
+        //                    else {
+        //                        id_toHide.push(id);
+        //                    }
+        //                });
+        //                id_toHide.forEach(i => {
+        //                    $(i).hide();
+        //                });
+
+        //                id_toShow.forEach(i => {
+        //                    $(i).show();
+        //                });
+        //            }
+        //        });
+        //    }
+        //    else {
+        //        var rows = document.querySelectorAll("[data-action='row']");
+        //        rows.forEach(r => {
+        //            var id = "#" + r.id;
+        //            $(id).show();
+        //        });
+
+        //    }
+        //}
+
     </script>
 }

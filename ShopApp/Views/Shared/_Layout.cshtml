@@ -1,14 +1,32 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+    <link href='https://fonts.googleapis.com/css?family=Audiowide' rel='stylesheet'>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ShopApp</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/site_additions.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+
+
 
 </head>
+<style>
+    body {
+        font-family: 'Audiowide';
+        font-size: 22px;
+    }
+
+    body {
+        background-image: url('https://t3.ftcdn.net/jpg/02/84/84/80/360_F_284848032_6nxcbpmlfEb0jsQ49wLeirMf9PO2HG3D.jpg');
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+    }
+</style>
+
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white navbar-left border-bottom box-shadow mb-3">
@@ -20,12 +38,7 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+
                         @if (Context.User != null && Context.User.Claims != null && Context.User.Claims.Count() > 0)
                         {
                             @if (Context.User.IsInRole("Admin"))
@@ -47,7 +60,7 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-route-userName="@Context.User.Identity.Name" asp-controller="Carts" asp-action="Usercart">
                                     My Cart
-                                    <span id="cart-total-qty" class="badge bg-success">0</span>
+                                    <span id="cart-total-qty" class="badge bg-success" data-action="cartQty" data-qty="0">0</span>
                                 </a>
                             </li>
                             <div class="navbar-right">
@@ -80,14 +93,9 @@
                 </main>
             </div>
 
-            <footer class="border-top footer text-muted">
-                <div class="container">
-                    &copy; 2021 - ShopApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                </div>
-            </footer>
             <script src="~/lib/jquery/dist/jquery.min.js"></script>
             <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-            <script src="~/js/site.js" asp-append-version="true"></script>
+            <script src="~/js/site.js"></script>
             @await RenderSectionAsync("Scripts", required: false)
         </body>
     </html>

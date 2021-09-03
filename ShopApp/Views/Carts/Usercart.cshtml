@@ -1,7 +1,15 @@
 ﻿@model ShopApp.Models.Cart
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+
+@{
+    ViewData["Title"] = "UserCart2";
+}
+
+<h1>UserCart</h1>
+
+
 @{var user = Context.User.Identity.Name;}
 
+<html>
 <div class="container mt-5 p-3 rounded cart">
     <div class="row no-gutters">
         <div class="col-md-8">
@@ -40,35 +48,35 @@
                         var item = Model.lines[i].product;
                         var itemqty = Model.lines[i].qty;
                         index++;
-        <tr id="line-pro-@item.Id" data-action="row" data-proid="@item.Id">
-            <td>
-                #@index
-            </td>
-            <td>
-                <img class="rounded" src="@item.imagePath" width="40">
-            </td>
-            <td>
-                <label>
-                    @item.Name
-                    <strong id="qty-strong-@item.Id" data-action="qty" data-proid="@item.Id">
-                        x @itemqty
-                    </strong>
-                </label>
+                        <tr id="line-pro-@item.Id" data-action="row" data-proid="@item.Id" data-qty="@itemqty">
+                            <td>
+                                #@index
+                            </td>
+                            <td>
+                                <img class="rounded" src="@item.imagePath" width="40">
+                            </td>
+                            <td>
+                                <label>
+                                    @item.Name
+                                    <strong id="qty-strong-@item.Id" data-action="qty" data-proid="@item.Id">
+                                        x @itemqty
+                                    </strong>
+                                </label>
 
-            </td>
+                            </td>
 
-            <td>
-                @Html.DisplayFor(modelItem => item.Category.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Category.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Price)
+                            </td>
 
-            <td>
-                <button type="button" data-userid="@Model.User.Username" id="removeBtn-@item.Id" data-name="@item.Name" data-action="Remove_From_Cart" data-productid="@item.Id" class="btn btn-danger">X</button>
-            </td>
-        </tr>
-}
+                            <td>
+                                <button type="button" data-userid="@Model.User.Username" id="removeBtn-@item.Id" data-name="@item.Name" data-action="Remove_From_Cart" data-productid="@item.Id" class="btn btn-danger">X</button>
+                            </td>
+                        </tr>
+                    }
 
                 </tbody>
             </table>
@@ -114,14 +122,16 @@
 
     </div>
 </div>
-
-
-                                                                                                            
-<script src="~/lib/jquery/dist/jquery.js"></script>
-<script src="~/js/site_additions.js"></script>
+</html>
 
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
+
+<script src="~/js/UserCart.js"></script>
+
+
 
 
 @section scripts
@@ -139,34 +149,35 @@
                 post_remove_fromCart: "@Url.Action("Remove_From_Cart", "Carts")",
                 data_action: "Remove_From_Cart",
             }
+            init(sett1);
+            decreseCartQty();
             console.log(sett1);
-            
-                const btns = document.querySelectorAll(`[data-action=${CSS.escape('Remove_From_Cart')}]`);
-                btns.forEach(btn => {
-                    btn.addEventListener("click", e => {
-                        console.log("click");
-                        var key = e.target;
-                        var idJQ = "#" + key.id;
-                        var pro_id = $(idJQ).data('productid');
-                        var name = $(idJQ).data('name');
-                        var userName = $(idJQ).data('userid');
 
-                        console.log(pro_id);
-                        console.log(name);
+                //const btns = document.querySelectorAll(`[data-action=${CSS.escape('Remove_From_Cart')}]`);
+                //btns.forEach(btn => {
+                //    btn.addEventListener("click", e => {
+                //        console.log("click");
+                //        var key = e.target;
+                //        var idJQ = "#" + key.id;
+                //        var pro_id = $(idJQ).data('productid');
+                //        var name = $(idJQ).data('name');
+                //        var userName = $(idJQ).data('userid');
 
+                //        console.log(pro_id);
+                //        console.log(name);
 
-
-                        $.ajax({
-                            type: "POST",
-                            url: sett1.post_remove_fromCart,
-                            data: { proId: pro_id, userName: userName }
-                            //    dataType: "json"
-                        });
+                //        $.ajax({
+                //            type: "POST",
+                //            url: sett1.post_remove_fromCart,
+                //            data: { proId: pro_id, userName: userName }
+                //            //    dataType: "json"
+                //        });
 
 
 
-                    });
-                });
+
+                //    });
+                //});
         });
     </script>
 }
