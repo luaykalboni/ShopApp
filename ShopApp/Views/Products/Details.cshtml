@@ -14,7 +14,7 @@
             @Html.DisplayNameFor(model => model.imagePath)
         </dt>
         <dd class="col-sm-10">
-            <img class="rounded" src="@Model.imagePath" width="40">
+            <img class="rounded" src="@Model.imagePath" width="250">
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
@@ -68,19 +68,20 @@
         <a input type="button" onclick="history.back()"><mark>Back to List</mark></a>|
         @if (Model.IsinStock == true)
         {
-            <button data-userid="@user" id="addButton-@Model.Id" data-name="@Model.Name" data-action="add_to_cart" data-productid="@Model.Id" class="btn btn-success">+</button>
+            <button data-userid="@user" id="addButton-@Model.Id" data-name="@Model.Name" data-action="add_to_cart" data-productid="@Model.Id" class="btn btn-success">Add to cart</button>
         }
     </div>
 }
 else
 {
-    <div>
-        <a input type="button" onclick="history.back()"><mark>Back to List</mark></a>|
-        @if (Model.IsinStock == true)
-        {
-            <button data-userid="@user" id="addButton-@Model.Id" data-name="@Model.Name" data-action="add_to_cart" data-productid="@Model.Id" class="btn btn-success">+</button>
-        }
-    </div>
+<div>
+    <a input type="button" onclick="history.back()"><mark>Back to List</mark></a>|
+    @if (Model.IsinStock == true)
+    {
+        <button data-userid="@user" id="addButton-@Model.Id" data-name="@Model.Name" data-action="add_to_cart" data-productid="@Model.Id" class="btn btn-success">Add to cart</button>
+        //<button type="button" data-userid="@user" id="addButton-@item.Id" data-name="@item.Name" data-action="add_to_cart" data-productid="@item.Id" class="btn btn-success rounded-0 mb-3 d-flex mr-5 justify-content-end"> &thinsp;<ion-icon name="add-circle-outline"></ion-icon>Add to cart</button>
+    }
+</div>
 
 }
 
@@ -96,6 +97,7 @@ else
 
             const sett = {
                 post_add_to_cart: "@Url.Action("Add_To_Cart", "Users")",
+                data_action: "add_to_cart"
             }
             init(sett);
 

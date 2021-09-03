@@ -4,10 +4,18 @@
 }
 
 <html>
+<style>
+    body {
+        background-image: url('https://t3.ftcdn.net/jpg/02/84/84/80/360_F_284848032_6nxcbpmlfEb0jsQ49wLeirMf9PO2HG3D.jpg');
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+    }
+</style>
 <body>
     <div class="text-center">
 
-        <h1 class="display-4">Welcome to StoreL</h1>
+        <h1 class="display-4">Welcome to ShopApp</h1>
     </div>
     <div id="body">
         <div class="categoriesContainer">
@@ -18,7 +26,7 @@
                     <div class="card col-3" style="width: 18rem;">
                         <img src="@item.CategoryImage" class="card-img-top" alt="...">
 
-                        <div class="card-body">
+                        <div class="card-body" >
                             <h5 class="card-title">@item.Name</h5>
                             <a asp-action="ShowproductsinCat" asp-controller="Products" asp-route-categoryId="@item.ID" class="btn btn-primary">View products</a>
                         </div>

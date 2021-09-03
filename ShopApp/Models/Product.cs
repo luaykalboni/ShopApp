@@ -14,7 +14,7 @@ namespace ShopApp.Models
         [Display(Name = "Product Name")]
         [DataType(DataType.Text)]
         [Required(ErrorMessage = "Please enter the name of your product.")]
-        [RegularExpression("^[A-Z]+[a-zA-Z ]*$", ErrorMessage = "The name must start with at least one uppercase letter.")]
+        [RegularExpression("^[A-Z]+[a-zA-Z ]+[0-9]*$", ErrorMessage = "The name must start with at least one uppercase letter.")]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "The Product must have a price")]

@@ -11,6 +11,14 @@
 <div class="input-group mb-3">
     <input type="text" data-action="filter_auto_complete" class="form-control" placeholder="Search product">
 </div>
+<style >
+    body {
+        background-image: url('https://t3.ftcdn.net/jpg/02/84/84/80/360_F_284848032_6nxcbpmlfEb0jsQ49wLeirMf9PO2HG3D.jpg');
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+    }
+</style>
 
 <div class="container">
     <div class="row">
@@ -20,17 +28,17 @@
             <div class="card col-3" style="width: 18rem;">
                 <img src="@item.imagePath" class="card-img-top" alt="...">
 
-                <div class="card-body">
+                <div class="card-body" >
                     @if (item.IsinStock == false)
                     {
                         <h5 class="card-title">@item.Name<span class="badge bg-danger">Not In Stock</span></h5>
-                        <p class="card-text">Price:@item.Price $</p>
+                        <p class="card-text">Price: $@item.Price</p>
                         <a href="/Products/Details/@item.Id" class="btn btn-primary">Details</a>
                     }
                     else
                     {
                         <h5 class="card-title">@item.Name</h5>
-                        <p class="card-text">Price:@item.Price $</p>
+                        <p class="card-text">Price: $@item.Price</p>
                         <a href="/Products/Details/@item.Id" class="btn btn-primary">Details</a>
                         <button type="button" data-userid="@user" id="addButton-@item.Id" data-name="@item.Name" data-action="add_to_cart" data-productid="@item.Id" class="btn btn-success rounded-0 mb-3 d-flex mr-5 justify-content-end"> &thinsp;<ion-icon name="add-circle-outline"></ion-icon>Add to cart</button>
                         <label id="lbl-qty-@item.Id" data-action="lbl_qty" data-productid="@item.Id"></label>

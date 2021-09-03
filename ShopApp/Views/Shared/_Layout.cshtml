@@ -11,7 +11,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white navbar-left border-bottom box-shadow mb-3">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ShopApp</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -45,48 +45,49 @@
 
                             }
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-route-userName="@Context.User.Identity.Name" asp-controller="Carts" asp-action="Usercart">My Cart
+                                <a class="nav-link text-dark" asp-area="" asp-route-userName="@Context.User.Identity.Name" asp-controller="Carts" asp-action="Usercart">
+                                    My Cart
                                     <span id="cart-total-qty" class="badge bg-success">0</span>
                                 </a>
                             </li>
                             <div class="navbar-right">
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" >Hello @Context.User.Identity.Name</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Logout">Logout</a>
-                                </li>
-                             </div>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark">Hello @Context.User.Identity.Name</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Logout">Logout</a>
+                            </li>
+                    </div>
 
 
-                         }
-                         else
-                         {
-                            <div class="navbar-right">
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Login">Login</a>
-                                </li>
-                            </div>
-                         }
-                     </ul>
-                 </div>
+                }
+                else
+                {
+                    <div class="navbar-right">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Login">Login</a>
+                        </li>
+                    </div>
+                }
+                        </ul>
+                    </div>
+                    </div>
+                </nav>
+            </header>
+            <div class="container">
+                <main role="main" class="pb-3">
+                    @RenderBody()
+                </main>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2021 - ShopApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
-</body>
-</html>
+            <footer class="border-top footer text-muted">
+                <div class="container">
+                    &copy; 2021 - ShopApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                </div>
+            </footer>
+            <script src="~/lib/jquery/dist/jquery.min.js"></script>
+            <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+            <script src="~/js/site.js" asp-append-version="true"></script>
+            @await RenderSectionAsync("Scripts", required: false)
+        </body>
+    </html>

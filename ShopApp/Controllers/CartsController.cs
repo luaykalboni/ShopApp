@@ -52,7 +52,7 @@ namespace ShopApp.Controllers
                     .ThenInclude(l => l.product)
                     .FirstOrDefaultAsync();
 
-                user.Cart.lines.ForEach(l =>
+                user.Cart.lines.ForEach(async l =>
                 {
                     if (l.productId == proId)
                     {
@@ -66,7 +66,7 @@ namespace ShopApp.Controllers
                         {
                             user.Cart.TotalPrice -= l.total_price_line;
                             user.Cart.lines.Remove(l);
-                            
+                            await _context.SaveChangesAsync();
                         }
 
                     }
