@@ -11,9 +11,6 @@
 
 @*view of products in category*@
 @{var user = Context.User.Identity.Name;}
-<form class="col-3 mt-4">
-    <input type="text" id="search_user_name" class="form-control" placeholder="Search..." aria-label="Search" />
-</form>
 <style>
 
     .card-img-top {
@@ -24,19 +21,17 @@
     .card {
         margin: 15px;
     }
-
-    /* .card:hover {
-            transform: scale(1.3);
-        }*/
 </style>
 
-
-
 <div class="form-control">
-    <label for="cart_total_qty">Qty</label>
+    <label for="cart_total_qty">Number of Products Selected:</label>
     <span id="cart_total_qty" class="badge bg-success" data-action="cartQty" data-user="@Context.User.Identity.Name" data-qty=""></span>
 
 </div>
+<form class="col-3 mt-4">
+    <input type="text" id="search_user_name" class="form-control" placeholder="Search Product" aria-label="Search" />
+</form>
+
 
 <div class="container">
     <div class="row">
@@ -65,7 +60,6 @@
 
                 </div>
             </div>
-
         }
     </div>
 </div>
@@ -105,7 +99,7 @@
             }
 
             var cart = document.getElementById('cart_total_qty');
-            var userNameCart=$("#cart_total_qty").data('user');
+            var userNameCart = $("#cart_total_qty").data('user');
             $.ajax({
                 type: "GET",
                 url: url.get_cartQty,
@@ -124,5 +118,67 @@
 
 
         });
+    </script>
+    <script>
+        $(document).ready(function () {
+
+
+            $.ajax({
+                url: '@Url.Action("get_products", "API")',
+                type: "Get",
+                dataType: "json",
+                success: function (data) {
+                    Init(data);
+
+                }
+            });
+        });
+
+        const arr_userNames = [];
+        const search_inp = document.getElementById("search_user_name");
+        search_inp.addEventListener("keyup", filter_user_name);
+
+        function Init(data) {
+            for (var i = 0; i < data.length; i++) {
+                arr_userNames.push(data[i]);
+            }
+        }
+
+        function filter_user_name(e) {
+            const text = e.target.value.toLowerCase();
+            const id_toShow = [];
+            const id_toHide = [];
+            if (text != "") {
+                arr_userNames.forEach(i => {
+                    var rows = document.querySelectorAll("[data-action='row']");
+                    if (i.toLowerCase().indexOf(text) != -1) {
+                        rows.forEach(r => {
+                            var id = "#" + r.id;
+                            if ($(id).data('user_name') == i) {
+                                id_toShow.push(id);
+                            }
+                            else {
+                                id_toHide.push(id);
+                            }
+                        });
+                        id_toHide.forEach(i => {
+                            $(i).hide();
+                        });
+
+                        id_toShow.forEach(i => {
+                            $(i).show();
+                        });
+                    }
+                });
+            }
+            else {
+                var rows = document.querySelectorAll("[data-action='row']");
+                rows.forEach(r => {
+                    var id = "#" + r.id;
+                    $(id).show();
+                });
+
+            }
+        }
     </script>
 }

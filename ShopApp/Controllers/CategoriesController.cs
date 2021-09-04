@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ShopApp.Models;
 using ShopApp.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ShopApp.Controllers
 {
@@ -19,12 +20,14 @@ namespace ShopApp.Controllers
             _context = context;
         }
 
+        [Authorize]
         // GET: Categories
         public async Task<IActionResult> Index()
         {
             return View(await _context.Category.ToListAsync());
         }
 
+        [Authorize]
         // GET: Categories/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -65,6 +68,7 @@ namespace ShopApp.Controllers
             return View(category);
         }
 
+        [Authorize]
         // GET: Categories/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -84,6 +88,7 @@ namespace ShopApp.Controllers
         // POST: Categories/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ID,Name,CategoryImage")] Category category)

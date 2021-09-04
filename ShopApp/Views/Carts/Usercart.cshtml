@@ -4,7 +4,7 @@
     ViewData["Title"] = "UserCart";
 }
 
-<h1>UserCart</h1>
+<h1>@Context.User.Identity.Name's Cart</h1>
 
 
 @{var user = Context.User.Identity.Name;}
@@ -12,7 +12,7 @@
 <html>
 
 <div class="form-control">
-    <label for="cart_total_qty">Qty</label>
+    <label for="cart_total_qty">Number of Products Selected:</label>
     <span id="cart_total_qty" class="badge bg-success" data-action="cartQty" data-user="@Context.User.Identity.Name" data-qty="@Model.getProductQty()">@Model.getProductQty()</span>
 
 </div>
@@ -133,8 +133,6 @@
                                 <div class="col-md-6"><label class="credit-card-label">Date</label><input type="text" class="form-control credit-inputs" placeholder="12/24"></div>
                                 <div class="col-md-6"><label class="credit-card-label">CVV</label><input type="text" class="form-control credit-inputs" placeholder="342"></div>
                             </div>
-                            <hr class="line">
-                            <div class="d-flex justify-content-between information"><span>Total price</span><strong id="total_price_payment">$ @Model.getTotalPrice()</strong></div>
                         </div>
 
                     </div>

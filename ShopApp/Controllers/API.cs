@@ -53,13 +53,13 @@ namespace ShopApp.Controllers
 
         }
 
-        [HttpGet]
-        public string[] get_products_inStock_inRange(int min, int max)
-        {
-            var a = _context.Product.Where(p => p.IsinStock == true && (p.Price > min && p.Price < max)).Select(u => u.Name).ToArray();
+        //[HttpGet]
+        //public string[] get_products_inStock_inRange(int min, int max)
+        //{
+        //    var a = _context.Product.Where(p => p.IsinStock == true && (p.Price > min && p.Price < max)).Select(u => u.Name).ToArray();
 
-            return a;
-        }
+        //    return a;
+        //}
 
         [HttpGet]
         public int getProductQty(string userName)

@@ -23,12 +23,14 @@ namespace ShopApp.Controllers
             _context = context;
         }
 
+        [Authorize]
         // GET: Users
         public async Task<IActionResult> Index()
         {
             return View(await _context.User.ToListAsync());
         }
 
+        [Authorize(Roles ="Admin")]
         // GET: Users/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -124,6 +126,10 @@ namespace ShopApp.Controllers
         }
         // GET: Users/Login
         public IActionResult Login()
+        {
+            return View();
+        }
+        public IActionResult AccessDenied()
         {
             return View();
         }
