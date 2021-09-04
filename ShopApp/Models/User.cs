@@ -10,7 +10,7 @@ namespace ShopApp.Models
     {
         public int Id { get; set; }
 
-        [StringLength(20, MinimumLength = 4)]
+        [StringLength(20, MinimumLength = 2)]
         [Required(ErrorMessage = "Please enter your username.")]
         [RegularExpression("^[A-Z][a-zA-Z ]*$", ErrorMessage = "Username must contains only letters and start with one uppercase letter")]
         public string Username { get; set; }

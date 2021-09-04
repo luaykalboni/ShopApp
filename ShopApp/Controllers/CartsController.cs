@@ -68,6 +68,7 @@ namespace ShopApp.Controllers
                             user.Cart.TotalPrice -= l.total_price_line;
                             l.product = null;
                             user.Cart.lines.Remove(l);
+                            _context.SaveChanges();
                         }
                     }
                 });

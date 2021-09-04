@@ -10,7 +10,7 @@ namespace ShopApp.Models
     {
         [Key]
         public int Id { get; set; }
-        [StringLength(20, MinimumLength = 5)]
+        [StringLength(20, MinimumLength = 2)]
         [Display(Name = "Product Name")]
         [DataType(DataType.Text)]
         [Required(ErrorMessage = "Please enter the name of your product.")]
@@ -30,7 +30,9 @@ namespace ShopApp.Models
         [Display(Name = "Image")]
         [DataType(DataType.ImageUrl)]
         public string imagePath { get; set; }
-        
+
+        [Display(Name = "In Stock")]
+        [Required(ErrorMessage = "Is the product in stock?")]
         public bool IsinStock { get; set; }
 
         //one -> many : Category -> Product
