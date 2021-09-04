@@ -34,9 +34,10 @@ namespace ShopApp.Controllers
 
             var shoppingsiteContext = await _context.Cart
                 .Include(c => c.lines)
-                .ThenInclude(l=>l.product)
+                .ThenInclude(l => l.product)
                 .ThenInclude(c => c.Category)
-                .Include(u=>u.User).Where(u => u.User.Username == userName).FirstOrDefaultAsync();
+                .Include(u => u.User)
+                .Where(u => u.User.Username == userName).FirstOrDefaultAsync();
             return View(shoppingsiteContext);
         }
 
@@ -80,6 +81,20 @@ namespace ShopApp.Controllers
 
         }
 
+        [HttpPost]
+        public async Task<User> Submit(string username)
+        {
+            var user = await _context.User.Where(u => u.Username == username).Include(u => u.Cart).FirstOrDefaultAsync();
+            if (user != null)
+            {
+                user.Cart = new Cart();
+                await _context.SaveChangesAsync();
+                return user;
+            }
+            return null;
+
+
+        }
 
         // GET: Carts/Details/5
         public async Task<IActionResult> Details(int? id)

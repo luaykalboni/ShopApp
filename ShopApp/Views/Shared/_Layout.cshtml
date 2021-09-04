@@ -60,42 +60,84 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-route-userName="@Context.User.Identity.Name" asp-controller="Carts" asp-action="Usercart">
                                     My Cart
-                                    <span id="cart-total-qty" class="badge bg-success" data-action="cartQty" data-qty="0">0</span>
+                                    @*<span id="cart_total_qty" class="badge bg-success" data-action="cartQty" data-user="@Context.User.Identity.Name" data-qty="0">0</span>*@
                                 </a>
                             </li>
                             <div class="navbar-right">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark">Hello @Context.User.Identity.Name</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Logout">Logout</a>
-                            </li>
-                    </div>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark">Hello @Context.User.Identity.Name</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Logout">Logout</a>
+                                </li>
+                            </div>
 
 
-                }
-                else
-                {
-                    <div class="navbar-right">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Login">Login</a>
-                        </li>
-                    </div>
-                }
-                        </ul>
-                    </div>
-                    </div>
-                </nav>
-            </header>
-            <div class="container">
-                <main role="main" class="pb-3">
-                    @RenderBody()
-                </main>
+                        }
+                        else
+                        {
+                            <div class="navbar-right">
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Login">Login</a>
+                                </li>
+                            </div>
+                        }
+                    </ul>
+                </div>
             </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
 
-            <script src="~/lib/jquery/dist/jquery.min.js"></script>
-            <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-            <script src="~/js/site.js"></script>
-            @await RenderSectionAsync("Scripts", required: false)
-        </body>
-    </html>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+
+
+    @*@section scripts
+        {
+            <script>
+            $(document).ready(function () {
+
+                console.log("READY");
+
+                const url = {
+                    get_cartQty: "@Url.Action("getProductQty", "API")",
+                }
+
+                var cart = document.getElementById('
+
+            ');
+                var userNameCart=$("#cart_total_qty").data('user');
+                $.ajax({
+                    type: "GET",
+                    url: url.get_cartQty,
+                    data: { userName: userNameCart },
+                    success: function (data) {
+                        console.log("data");
+                        console.log(data);
+                        cart.innerHTML = data;
+                        $("#cart_total_qty").data('qty') = data;
+
+                    }
+                });
+
+                console.log("DONE");
+
+
+
+            });
+            </script>
+        }*@
+
+</body>
+</html>
+
+
+@* <span id="cart-total-qty" class="badge bg-success" data-action="cartQty" data-qty="0">0</span>*@

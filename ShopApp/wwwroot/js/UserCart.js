@@ -1,41 +1,29 @@
 ﻿
 function init(url) {
 
-    console.log(url);
+    //Select each Remove btn in UserCart and addEventListener
     const btns = document.querySelectorAll(`[data-action=${CSS.escape(url.data_action)}]`);
-    console.log(btns);
 
     btns.forEach(btn => {
         btn.addEventListener("click", e => {
-            console.log("click");
             var key = e.target;
             var idJQ = "#" + key.id;
             var pro_id = $(idJQ).data('productid');
-            var name = $(idJQ).data('name');
             var userName = $(idJQ).data('userid');
-
-            console.log(pro_id);
-            console.log(name);
-
-
 
             $.ajax({
                 type: "POST",
                 url: url.post_remove_fromCart,
                 data: { proId: pro_id, userName: userName }
-                //    dataType: "json"
             });
 
-            removePresnt(pro_id);
+            RemoveFromTable(pro_id);
             decreseCartQty();
-
-
         });
     });
 }
 
-
-function removePresnt(proId) {
+function RemoveFromTable(proId) {
 
     const rows = document.querySelectorAll(`[data-action='row']`);
     rows.forEach(r => {
@@ -45,40 +33,83 @@ function removePresnt(proId) {
 
 
         if (itemId == proId && itemQty == 1) {
-            console.log(id);
-            console.log(itemId);
-            console.log(itemQty);
-
             document.getElementById(r.id).style.display = 'none';
+            const totalPrice = document.querySelectorAll(`[data-action='totalPrice']`);
+            totalPrice.forEach(t => {
+                var id = "#" + t.id;
+                var itemId = $(id).data('proid');
+                if (itemId == proId) {
+                    $(id).data('proactive', false);
+                }
+            });
+            UpdateTotalPrice();
+
+
         }
         else {
-            if (itemId == proId && itemQty > 1)
-            {
+            if (itemId == proId && itemQty > 1) {
+                const qtysLable = document.querySelectorAll(`[data-action='qty']`);
+                qtysLable.forEach(l => {
+                    var id_l = "#" + l.id;
+                    var newQty = itemQty - 1;
+                    if ($(id_l).data('proid') == proId) {
+                        l.innerHTML = " x" + newQty;
+                        $(id).data('qty', newQty);
 
-                console.log(id);
-                console.log(itemId);
-                console.log(itemQty);
-                    const qtysLable = document.querySelectorAll(`[data-action='qty']`);
-                    qtysLable.forEach(l => {
-                        var id_l = "#" + l.id;
-                        var newQty = itemQty - 1;
-                        console.log("newQty");
-                        console.log(newQty);
-                        if ($(id_l).data('proid') == proId) {
-                            l.innerHTML = " x" + newQty;
-                            $(id).data('qty',newQty);
+                        UpdateTotalPrice_Line(newQty, proId);
 
-                        }
-                    });
 
-                }
+
+                    }
+                });
+
+            }
+
         }
+
     });
 
 
 }
 
+function UpdateTotalPrice_Line(newQty, proId) {
 
+    const totalPrice = document.querySelectorAll(`[data-action='totalPrice']`);
+    totalPrice.forEach(t => {
+        var id = "#" + t.id;
+        var price = $(id).data('price');
+        var itemId = $(id).data('proid');
+
+        if (itemId == proId) {
+
+            t.innerHTML = price * newQty;
+        }
+
+    });
+    UpdateTotalPrice();
+
+
+}
+
+function UpdateTotalPrice() {
+    var sum = 0;
+    const totalPrice = document.querySelectorAll(`[data-action='totalPrice']`);
+
+    totalPrice.forEach(t => {
+        var id = "#" + t.id;
+        var totalLine = parseFloat(t.innerHTML);
+
+        if ($(id).data('proactive') == true) {
+            sum += totalLine;
+        }
+
+    });
+
+    document.getElementById('totalPricestrong').innerHTML = sum;
+    $("#total_price_payment").innerHTML = sum;
+
+
+}
 
 function decreseCartQty() {
     const qty_lbl = document.querySelector(`[data-action='cartQty']`);
@@ -87,3 +118,5 @@ function decreseCartQty() {
     qty_lbl.innerHTML = qty;
     $(idJQ).data('qty', qty);
 }
+
+

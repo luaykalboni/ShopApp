@@ -40,7 +40,7 @@ namespace ShopApp.Controllers
         [HttpGet]
         public string[] get_carts()
         {
-            var usersNames = _context.Cart.Include(c=>c.User).Select(u => u.User.Username).ToArray();
+            var usersNames = _context.Cart.Include(c => c.User).Select(u => u.User.Username).ToArray();
 
             return usersNames;
         }
@@ -53,13 +53,34 @@ namespace ShopApp.Controllers
 
         }
 
-            [HttpGet]
-        public string[] get_products_inStock_inRange(int min,int max)
+        [HttpGet]
+        public string[] get_products_inStock_inRange(int min, int max)
         {
-            var a = _context.Product.Where(p=>p.IsinStock==true && ( p.Price>min && p.Price<max)).Select(u => u.Name).ToArray();
+            var a = _context.Product.Where(p => p.IsinStock == true && (p.Price > min && p.Price < max)).Select(u => u.Name).ToArray();
 
             return a;
         }
+
+        [HttpGet]
+        public int getProductQty(string userName)
+        {
+            var user = _context.User
+                .Include(u => u.Cart)
+                .ThenInclude(c => c.lines)
+                .Where(u => u.Username == userName)
+                .FirstOrDefault();
+
+            if (user != null)
+            {
+                return user.Cart.getProductQty();
+            }
+
+            return 0;
+
+
+        }
+
+
 
     }
 }

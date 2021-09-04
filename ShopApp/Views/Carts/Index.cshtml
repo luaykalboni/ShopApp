@@ -9,6 +9,10 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+<form class="col-3 mt-4">
+    <input type="text" id="search_user_name" class="form-control" placeholder="Search User" aria-label="Search" />
+</form>
 <table class="table">
     <thead>
         <tr>
@@ -18,25 +22,96 @@
             <th>
                 @Html.DisplayNameFor(model => model.TotalPrice)
             </th>
-      
+
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.Username)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TotalPrice)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr data-user_name="@item.User.Username" id="tr-@item.Id" data-action="row">
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.Username)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TotalPrice)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
+
+@section scripts
+    {
+    <script>
+        $(document).ready(function () {
+
+
+            $.ajax({
+                url: '@Url.Action("get_users", "API")',
+                type: "Get",
+                dataType: "json",
+                success: function (data) {
+                    Init(data);
+
+                }
+            });
+        });
+
+        const arr_userNames = [];
+        const search_inp = document.getElementById("search_user_name");
+        search_inp.addEventListener("keyup", filter_user_name);
+
+        function Init(data) {
+            for (var i = 0; i < data.length; i++) {
+                arr_userNames.push(data[i]);
+            }
+        }
+
+        function filter_user_name(e) {
+            const text = e.target.value.toLowerCase();
+            const id_toShow = [];
+            const id_toHide = [];
+            if (text != "") {
+                arr_userNames.forEach(i => {
+                    var rows = document.querySelectorAll("[data-action='row']");
+                    if (i.toLowerCase().indexOf(text) != -1) {
+                        rows.forEach(r => {
+                            var id = "#" + r.id;
+                            if ($(id).data('user_name') == i) {
+                                id_toShow.push(id);
+                            }
+                            else {
+                                id_toHide.push(id);
+                            }
+                        });
+                        id_toHide.forEach(i => {
+                            $(i).hide();
+                        });
+
+                        id_toShow.forEach(i => {
+                            $(i).show();
+                        });
+                    }
+                });
+            }
+            else {
+                var rows = document.querySelectorAll("[data-action='row']");
+                rows.forEach(r => {
+                    var id = "#" + r.id;
+                    $(id).show();
+                });
+
+            }
+        }
+    </script>
+}

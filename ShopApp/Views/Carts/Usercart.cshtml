@@ -10,6 +10,13 @@
 @{var user = Context.User.Identity.Name;}
 
 <html>
+
+<div class="form-control">
+    <label for="cart_total_qty">Qty</label>
+    <span id="cart_total_qty" class="badge bg-success" data-action="cartQty" data-user="@Context.User.Identity.Name" data-qty="@Model.getProductQty()">@Model.getProductQty()</span>
+
+</div>
+
 <div class="container mt-5 p-3 rounded cart">
     <div class="row no-gutters">
         <div class="col-md-8">
@@ -34,6 +41,9 @@
                         <th>
                             Product price
                         </th>
+                        <th>
+                            Total price
+                        </th>
 
                         <th>
                             Remove
@@ -42,11 +52,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @{int index = 0; }
+                    @{int index = 0;
+                        double sum = 0;}
                     @for (int i = 0; i < Model.lines.Count(); i++)
                     {
                         var item = Model.lines[i].product;
                         var itemqty = Model.lines[i].qty;
+                        var price = Model.lines[i].product.Price;
+                        var totalPrice = price * itemqty;
+                        sum += totalPrice;
                         index++;
                         <tr id="line-pro-@item.Id" data-action="row" data-proid="@item.Id" data-qty="@itemqty">
                             <td>
@@ -71,7 +85,9 @@
                             <td>
                                 @Html.DisplayFor(modelItem => item.Price)
                             </td>
-
+                            <td>
+                                <label id="total_price_@item.Id" data-proactive="true" data-proid="@item.Id" data-action="totalPrice" data-price="@price">@totalPrice</label>
+                            </td>
                             <td>
                                 <button type="button" data-userid="@Model.User.Username" id="removeBtn-@item.Id" data-name="@item.Name" data-action="Remove_From_Cart" data-productid="@item.Id" class="btn btn-danger">X</button>
                             </td>
@@ -79,7 +95,15 @@
                     }
 
                 </tbody>
+
             </table>
+
+            <label>
+                Total Price:
+                <strong id="totalPricestrong">
+                    @sum
+                </strong>
+            </label>
 
         </div>
 
@@ -110,12 +134,13 @@
                                 <div class="col-md-6"><label class="credit-card-label">CVV</label><input type="text" class="form-control credit-inputs" placeholder="342"></div>
                             </div>
                             <hr class="line">
-                            <div class="d-flex justify-content-between information"><span>Total price</span><span id="total_price">$@Model.TotalPrice</span></div>
+                            <div class="d-flex justify-content-between information"><span>Total price</span><strong id="total_price_payment">$ @Model.getTotalPrice()</strong></div>
                         </div>
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button type="submit" class="btn btn-primary" id="done">Save changes </button>
+
                     </div>
                 </div>
             </div>
@@ -151,34 +176,55 @@
                 data_action: "Remove_From_Cart",
             }
             init(sett1);
-            decreseCartQty();
             console.log(sett1);
+        });
+    </script>
 
-                //const btns = document.querySelectorAll(`[data-action=${CSS.escape('Remove_From_Cart')}]`);
-                //btns.forEach(btn => {
-                //    btn.addEventListener("click", e => {
-                //        console.log("click");
-                //        var key = e.target;
-                //        var idJQ = "#" + key.id;
-                //        var pro_id = $(idJQ).data('productid');
-                //        var name = $(idJQ).data('name');
-                //        var userName = $(idJQ).data('userid');
+    <script>
+        $(document).ready(function () {
 
-                //        console.log(pro_id);
-                //        console.log(name);
+            console.log("READY");
 
-                //        $.ajax({
-                //            type: "POST",
-                //            url: sett1.post_remove_fromCart,
-                //            data: { proId: pro_id, userName: userName }
-                //            //    dataType: "json"
-                //        });
+            const url = {
+                get_cartQty: "@Url.Action("getProductQty", "API")",
+                done: "@Url.Action("Submit", "Carts")",
+            }
+
+            var cart = document.getElementById('cart_total_qty');
+            var userNameCart=$("#cart_total_qty").data('user');
+            $.ajax({
+                type: "GET",
+                url: url.get_cartQty,
+                data: { userName: userNameCart },
+                success: function (data) {
+                    console.log("data");
+                    console.log(data);
+                    cart.innerHTML = data;
+                    $("#cart_total_qty").data('qty',data);
+
+                }
+            });
+
+            console.log("DONE");
 
 
+            $("#done").click(e => {
+                $.ajax({
+                    type: "Post",
+                    url: url.done,
+                    data: { userName: userNameCart },
+                    success: function (data) {
 
 
-                //    });
-                //});
+                        alert("Thanks For Buying!");
+
+                    }
+
+                });
+
+            setTimeout(() => { window.location.href = "@Url.Action("Index", "Home")"; }, 1000);
+
+            });
         });
     </script>
 }

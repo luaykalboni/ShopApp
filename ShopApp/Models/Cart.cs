@@ -21,5 +21,24 @@ namespace ShopApp.Models
         //many <-> many : Cart <-> Product 
         public List<CartLine> lines { get; set; }
 
+        public int getProductQty()
+        {
+            int count = 0;
+            this.lines.ForEach(l =>
+            {
+                count += l.qty;
+            });
+            return count;
+        }
+
+        public double getTotalPrice()
+        {
+            double sum = 0;
+            this.lines.ForEach(l =>
+            {
+                sum += l.total_price_line;
+            });
+            return sum;
+        }
     }
 }
